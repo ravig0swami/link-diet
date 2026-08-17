@@ -69,4 +69,33 @@ export class UrlService {
 
     return data;
   }
+
+  /**
+   * Looks up the original URL by short code and asynchronously increments the click count.
+   * Returns null if not found.
+   */
+  static async getOriginalUrl(shortCode: string): Promise<string | null> {
+    const { data, error } = await supabase
+      .from("urls")
+      .select("original_url, click_count")
+      .eq("short_code", shortCode)
+      .single();
+
+    if (error || !data) {
+      return null;
+    }
+
+    // Fire and forget the click count increment
+    supabase
+      .from("urls")
+      .update({ click_count: data.click_count + 1 })
+      .eq("short_code", shortCode)
+      .then(({ error: updateError }) => {
+        if (updateError) {
+          console.error(`Failed to increment click count for ${shortCode}:`, updateError);
+        }
+      });
+
+    return data.original_url;
+  }
 }

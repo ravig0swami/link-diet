@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import { env } from "./config/env.js";
 import apiRouter from "./routes/index.js";
+import redirectRouter from "./routes/redirect.routes.js";
 import { errorHandler, notFoundHandler } from "./middleware/error-handler.js";
 
 const app = express();
@@ -22,6 +23,9 @@ app.use(express.json({ limit: "1mb" }));
 
 // API routes
 app.use("/api/v1", apiRouter);
+
+// Redirect route (mounted at root)
+app.use("/", redirectRouter);
 
 // Error handling (must be registered after routes)
 app.use(notFoundHandler);
