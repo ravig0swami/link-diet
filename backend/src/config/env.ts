@@ -9,10 +9,10 @@ const envSchema = z.object({
   FRONTEND_URL: z.string().url().default("http://localhost:3000"),
   SHORT_URL_BASE: z.string().url().default("http://localhost:5000"),
 
-  // Supabase — optional in Phase 1, required from Phase 2
-  SUPABASE_URL: z.string().url().optional(),
-  SUPABASE_ANON_KEY: z.string().min(1).optional(),
-  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
+  // Supabase — Required for Phase 2+
+  SUPABASE_URL: z.string().url(),
+  SUPABASE_ANON_KEY: z.string().min(1).optional(), // Only needed for client-side/auth later
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
 });
 
 const parsed = envSchema.safeParse(process.env);
